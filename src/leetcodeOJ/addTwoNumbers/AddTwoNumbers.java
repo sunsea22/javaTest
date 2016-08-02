@@ -1,11 +1,15 @@
 package leetcodeOJ.addTwoNumbers;
 
+import java.util.List;
+
 /**
  * Created by Flyln on 16/7/23.
  * Input: (2 -> 4 -> 3) + (5 -> 6 -> 4)
  * Output: 7 -> 0 -> 8
  * 最开始result将值赋给head，这里应该赋值的是resut的地址
  * 当result改变时，head会相应地动态增加
+ *
+ * 当l1直接赋给pre时，pre改变，l1也会相应的改变
  */
 public class AddTwoNumbers {
     public static void main(String[] args) {
@@ -16,7 +20,18 @@ public class AddTwoNumbers {
         ListNode l2 = new ListNode(5);
         l2.next = new ListNode(6);
         l2.next.next = new ListNode(4);
-        System.out.println(result.addTwoNumbers(l1,l2));
+        System.out.println(result.addTwoNumbers(l1, l2));
+
+        System.out.println(new Solution().reverseList(l1));
+
+        ListNode l3 = new ListNode(1);
+        l3.next = new ListNode(2);
+        l3.next.next = new ListNode(3);
+        l3.next.next.next = new ListNode(4);
+        l3.next.next.next.next = new ListNode(5);
+
+        System.out.println(new Solution().reverseBetween(l3,1,4));
+
     }
 }
 
@@ -48,5 +63,73 @@ class Solution {
             result.next = new ListNode(flag);
         }
         return head.next;
+    }
+
+    /**
+     * 单链表元素反转
+     * @param head
+     * @return
+     */
+    public ListNode reverseList(ListNode head) {
+        if (head == null || head.next == null) return head;
+
+        ListNode pre = head;
+        ListNode p = head.next;
+        pre.next = null;
+        ListNode nxt;
+
+        while (p != null) {
+            nxt = p.next;
+            p.next = pre;
+            pre = p;
+            p = nxt;
+        }
+        return pre;
+    }
+
+    public ListNode reverseBetween(ListNode head, int m, int n) {
+        if (head == null || head.next == null)
+            return head;
+
+        ListNode newHead = new ListNode(-1);
+        newHead.next = head;
+        ListNode pre = newHead, cur = newHead;
+
+        for (int i = 0; cur != null && i < n - m; ++i) {
+            cur = cur.next;
+        }
+
+        ListNode temp = null;
+        for (int i = 0; cur != null && i < m; ++i) {
+            cur = cur.next;
+            temp = pre;
+            pre = pre.next;
+        }
+
+        ListNode nextHead = cur.next;
+        cur.next = null;
+        temp.next = reverse(pre);
+        cur = newHead;
+
+        for (int i = 0; cur != null && i < n; ++i) {
+            cur = cur.next;
+        }
+
+        cur.next = nextHead;
+
+        return newHead.next;
+    }
+
+    public ListNode reverse(ListNode head) {
+        ListNode reverse = null;
+        ListNode next = null;
+
+        while (head != null) {
+            next = head.next;
+            head.next = reverse;
+            reverse = head;
+            head = next;
+        }
+        return reverse;
     }
 }
