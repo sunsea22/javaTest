@@ -132,4 +132,30 @@ class Solution {
         }
         return reverse;
     }
+
+    /**
+     * 234. Palindrome Linked List
+     * 找出中间的位置，然后将后半部分的链表反转，然后跟前半部分的链表逐个位置比对
+     * @param head
+     * @return
+     */
+    public boolean isPalindrome(ListNode head) {
+        ListNode end = head;
+        ListNode mid = head;
+
+        while (end != null && end.next != null) {
+            end = end.next.next;
+            mid = mid.next;
+        }
+
+        if (end != null) mid = mid.next;
+        mid = reverse(mid);
+
+        while (mid != null) {
+            if (mid.val != head.val) return false;
+            mid = mid.next;
+            head = head.next;
+        }
+        return true;
+    }
 }
